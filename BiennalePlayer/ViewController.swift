@@ -106,25 +106,40 @@ class ViewController: UIViewController {
     }
     
     @objc func setupScreen(){
+        print("Setup screen.. ")
         if UIScreen.screens.count > 1{
             
             //find the second screen
             let secondScreen = UIScreen.screens[1]
             
+            // Compensate underscan
+            secondScreen.overscanCompensation = UIScreenOverscanCompensation(rawValue: 2)!
+            
             //set up a window for the screen using the screens pixel dimensions
             secondWindow = UIWindow(frame: secondScreen.bounds)
+            //secondWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 1920, height: 1080))
             //windows require a root view controller
             //let viewcontroller = UIViewController()
             secondWindow?.rootViewController = self
             secondWindow?.screen = secondScreen
+            //secondWindow?.backgroundColor = UIColor.orange
             secondWindow?.isHidden = false
             
+            // SUBVIEW (Debug)
+            /*let subview = UIView(frame: CGRect(x: 10, y: 10, width: 1900, height: 1060))
+            subview.backgroundColor = UIColor.red
+            secondWindow!.addSubview(subview)*/
+            
             // WEBVIEW 2
-            self.playerWV = LocalWebView(frame: secondWindow!.frame)
+            let underscanX = -97
+            let underscanY = -54
+            self.playerWV = LocalWebView(frame: CGRect(x: underscanX, y: underscanY, width: 1920-2*underscanX, height: 1080-2*underscanY))
             secondWindow!.addSubview(self.playerWV)
             playerWV.navigationDelegate = self
             playerWV.configuration.userContentController.add(self, name: "player")
             playerWV.loadFile(name: "zzz/page_player.html")
+            
+            print("Second screen initialized ")
         }
     }
     

@@ -107,3 +107,5 @@ video.ontimeupdate = function() {
 video.onerror = function() {
     console.log("error ",video.error.message)
 };
+
+onMessage("loop _standby.mp4")
