@@ -5,7 +5,7 @@ var idleTimeList = 15000;
 var idleTimeFilm = 30000;
 var idleTime = idleTimeList;
 
-$('.filmCard, .player').hide();
+$('.player').hide();
 
 var loadedFilm = 'none';
 var playOrPause = 'pause';
@@ -13,13 +13,22 @@ var isPlaying = false;
 
 // DEBUG
 ///////////////////////////////////////////////////////////
-//$('#waitScreen').hide();
+// $('#waitScreen').hide();
+$('body, .player, .controls, #waitScreen').css( "maxWidth", "1024px");
+$('body').css( "margin", "auto");
+$('body').css( "marginTop", "-20px");
+$('html').css( "backgroundColor", "lightgrey");
 
 
 // APP COMMUNICATION
 ///////////////////////////////////////////////////////////
 function sendMessage(message){
+  try {
     window.webkit.messageHandlers.teleco.postMessage(message)
+  }
+  catch(error) {
+    //console.log(error)
+  }
 }
 function onMessage(message){
     message = message.split(" ")
@@ -33,32 +42,38 @@ function onMessage(message){
 ///////////////////////////////////////////////////////////
 $('.player, #waitScreen').on("touchmove", function(e) { e.preventDefault(); });
 
+
+// FIX IOS IMAGE GRAB
+///////////////////////////////////////////////////////////
+
+
 // SHOW
 ///////////////////////////////////////////////////////////
 $('.film').on('click',function(){
-    var filmName = $(this).attr('id');
-    showFilm(filmName);
+
+  var movie = $(this);
+
+  loadedFilm = movie.find('.filmTitle').text().trim();
+  console.log(loadedFilm)
+
+  $('#filmFiche').empty()
+  $('#filmFiche').append(movie.html())
+  sendMessage('info '+btoa( movie.serialize() ) );
+  $('.player').fadeIn(fadeTime, function(){ /*$('.filmList').hide();*/ });
+
+  // Player CTRLS
+  $('#play').children('img').attr('src', "res/images/play.png");
+  $('#scrollbar').css('margin-left','0%');
+  idleTime = idleTimeFilm;
+  resetTimer();
 });
 
-function showFilm(filmName){
-    loadedFilm = filmName;
-    var filmCard = filmName+'-card';
-    $('.filmCard').hide();
-    $('#'+filmCard).show();
-    sendMessage('info '+btoa( $('#'+filmCard).prop('outerHTML') ) );
-    $('.player').fadeIn(fadeTime, function(){ /*$('.filmList').hide();*/ });
-    // css
-    $('#play').children('img').attr('src', "res/images/play.png");
-    $('#scrollbar').css('margin-left','0%');
-    idleTime = idleTimeFilm;
-    resetTimer();
-}
 
 // PLAY PAUSE
 ///////////////////////////////////////////////////////////
 $('#play').on('click',function(){
     if(isPlaying==false){
-      var fileName = $('#'+loadedFilm+'-card').find('.filmFile').text()
+      var fileName = $('#filmFiche').find('.filmFile').text().trim()
       console.log("play", fileName)
       sendMessage('play '+fileName);
       isPlaying = true;
@@ -143,4 +158,3 @@ function resetTimer(){
       if (isPlaying==false) showWaitScreen()   // Go to wait screen
     }, idleTime);
 }
-
