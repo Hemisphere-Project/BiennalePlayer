@@ -59,7 +59,7 @@ body
 {
   margin:0;
   font-family: maax, Helvetica, Sans-Serif;
-  font-size: 18px;
+  font-size: 20px;
   background-color: white;
   color: rgb(14,13,57);
   -webkit-touch-callout: none;
@@ -72,6 +72,10 @@ body
   overflow-y: scroll;
   width: 100%;
   overflow-x: hidden;
+}
+
+body.playerBody {
+  background-color: black;
 }
 
 .no-scroll {
@@ -205,6 +209,7 @@ body
 .film .filmInfo {
   padding: 10px 0;
   font-style: italic;
+  font-size: 18px;
 }
 
 .film .filmImage {
@@ -230,9 +235,10 @@ body
 #closer{
   position: absolute;
   z-index: 12;
-  padding: 0 20px;
-  top: 20px;
-  right: 0;
+  padding: 0;
+  top: 30px;
+  right: 30px;
+  zoom: 140%;
 }
 
 .filmCard{
@@ -298,19 +304,19 @@ body
 }
 #play{
   display:inline-block;
-  width: 30px;
-  margin-right:10px;
+  width: 45px;
+  margin-right:20px;
 }
 #scrollbarContainer{
   display:inline-block;
-  width: 88%;
-  height: 33px;
-  border: 1px solid black;
+  width: 85%;
+  height: 50px;
+  border: 1px solid rgb(14,13,57);
 }
 
 #scrollbar{
-  background-color: blue;
-  width: 2px;
+  background-color: rgb(14,13,57);
+  width: 0px;
   height: 100%;
 }
 
@@ -350,11 +356,5 @@ video {
 
 /* ----------- PLAYER INFO ----------- */
 #infoplayer {
-    position: fixed;
-    top: 30px;
-    bottom: 30px;
-    left: 30px;
-    right: 30px;
-    border: 1px solid white;
-    padding: 10px;
+    zoom: 150%;
 }

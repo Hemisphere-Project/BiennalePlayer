@@ -19,33 +19,34 @@ function onMessage(message){
 
     message = message.split(" ")
     console.log(message)
-    
+
     // PLAY MOVIE
     if (message[0] == "play" || message[0] == "loop") {
         loop = (message[0] == "loop")
         if (message.length > 1 && message[1] != currentMedia) videoLoad(message[1])
         if (currentMedia!= "") videoPlay()
     }
-    
+
     // PAUSE MOVIE
     else if (message[0] == "pause") videoPause()
-        
+
     // STOP MOVIE
     else if (message[0] == "stop") videoStop(true)
-        
+
     // SKIP
     else if (message[0] == "skip") {
         if (message.length > 1) video.currentTime = video.duration*parseInt(message[1])/100
     }
-    
+
     // INFO
     else if (message[0] == "info") {
         message.shift()
         message = message.join(' ')
-        $('#infoplayer').html(atob(message))
+        console.log(message)
+        $('#infoplayer').html(message)
         videoStop(true)
     }
-    
+
     // BLACK
     else if (message[0] == "black") {
         videoStop(false)

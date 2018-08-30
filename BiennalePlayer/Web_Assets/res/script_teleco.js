@@ -1,8 +1,9 @@
 
 var fadeTime = 500;
 
-var idleTimeList = 15000;
-var idleTimeFilm = 30000;
+var idleTimeList = 15;
+var idleTimeFilm = 45;
+var idleTimePause = 300;
 var idleTime = idleTimeList;
 
 $('.player').hide();
@@ -33,7 +34,7 @@ function sendMessage(message){
 function onMessage(message){
     message = message.split(" ")
     if (message[0] == "progress") {
-        if (isPlaying) $('#scrollbar').css('margin-left', parseInt(message[1])+'%');
+        if (isPlaying) $('#scrollbar').css('width', parseInt(message[1])+'%');
     }
     else if (message[0] == "end") endOfFilm()
 }
@@ -58,14 +59,14 @@ $('.film').on('click',function(){
 
   $('#filmFiche').empty()
   $('#filmFiche').append(movie.html())
-  sendMessage('info '+btoa( movie.serialize() ) );
+  sendMessage('info '+$('#filmFiche')[0].outerHTML.replace(/(\r\n\t|\n|\r\t)/gm,"") );
   $('.player').fadeIn(fadeTime, function(){ /*$('.filmList').hide();*/ });
 
   // Player CTRLS
   $('#play').children('img').attr('src', "res/images/play.png");
-  $('#scrollbar').css('margin-left','0%');
-  idleTime = idleTimeFilm;
-  resetTimer();
+  // $('#scrollbar').css('margin-left','0%');
+  $('#scrollbar').css('width','0%');
+  resetTimer(idleTimeFilm);
 });
 
 
@@ -78,11 +79,13 @@ $('#play').on('click',function(){
       sendMessage('play '+fileName);
       isPlaying = true;
       $('#play').children('img').attr('src', "res/images/pause.png");
+      stopTimer();
     }
     else if(isPlaying==true){
       isPlaying = false;
       $('#play').children('img').attr('src', "res/images/play.png");
       sendMessage('pause');
+      resetTimer(idleTimePause);
     }
 });
 
@@ -110,7 +113,7 @@ function closeFilm(){
                          sendMessage('loop _standby.mp4');
     });
     loadedFilm = 'none';
-    idleTime = idleTimeList;
+    resetTimer(idleTimeList);
 }
 
 
@@ -120,7 +123,7 @@ function endOfFilm(){
     isPlaying = false;
     $('#play').children('img').attr('src', "res/images/play.png");
     //closeFilm();
-    //resetTimer();
+    resetTimer(idleTimeFilm);
 }
 
 
@@ -130,7 +133,7 @@ function endOfFilm(){
 var timeoutHandle;
 var timeoutHandle2;
 
-$(document).on('click touchstart', function(){ resetTimer(); });
+$(document).on('click touchstart', function(){ resetTimer() });
 
 //resetTimer();
 
@@ -152,9 +155,14 @@ function showWaitScreen() {
 }
 
 // Timer
-function resetTimer(){
-    clearTimeout(timeoutHandle);
+function resetTimer(idleT){
+    stopTimer()
+    if (idleT !== undefined) idleTime = idleT
     timeoutHandle = setTimeout(function(){
       if (isPlaying==false) showWaitScreen()   // Go to wait screen
-    }, idleTime);
+    }, idleTime*1000);
+}
+
+function stopTimer() {
+    clearTimeout(timeoutHandle)
 }
