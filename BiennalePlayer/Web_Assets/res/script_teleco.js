@@ -14,10 +14,10 @@ var isPlaying = false;
 // DEBUG
 ///////////////////////////////////////////////////////////
 // $('#waitScreen').hide();
-$('body, .player, .controls, #waitScreen').css( "maxWidth", "1024px");
-$('body').css( "margin", "auto");
-$('body').css( "marginTop", "-20px");
-$('html').css( "backgroundColor", "lightgrey");
+// $('body, .player, .controls, #waitScreen').css( "maxWidth", "1024px");
+// $('body').css( "margin", "auto");
+// $('body').css( "marginTop", "-20px");
+// $('html').css( "backgroundColor", "lightgrey");
 
 
 // APP COMMUNICATION
