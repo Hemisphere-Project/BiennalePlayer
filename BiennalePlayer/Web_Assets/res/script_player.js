@@ -8,6 +8,10 @@ var video = document.getElementById('videoplayer');
 var currentMedia = ""
 var loop = false
 
+//var standbyMedia = '_standby.mp4'
+//var standbyMedia = 'Clément_Cogitore-Indes_galantes.mp4'
+var standbyMedia = 'LaHorde-CLOUD_CHASERS.mp4'
+
 // APP COMMUNICATION
 ///////////////////////////////////////////////////////////
 
@@ -21,10 +25,15 @@ function onMessage(message){
     console.log(message)
 
     // PLAY MOVIE
-    if (message[0] == "play" || message[0] == "loop") {
-        loop = (message[0] == "loop")
-        if (message.length > 1 && message[1] != currentMedia) videoLoad(message[1])
+    if (message[0] == "play" || message[0] == "loop" || message[0] == "wait") {
+        loop = (message[0] == "loop" || message[0] == "wait")
+
+        if (message[0] == "wait") videoLoad(standbyMedia)
+        else if (message.length > 1 && message[1] != currentMedia) videoLoad(message[1])
+
         if (currentMedia!= "") videoPlay()
+
+        if (message[0] == "wait") $('#wait_overlay').show()
     }
 
     // PAUSE MOVIE
@@ -80,6 +89,7 @@ function videoPause() {
 }
 
 function videoStop(backToInfo) {
+    $('#wait_overlay').fadeOut(fadeTimeStop)
     $('#pause_overlay').hide()
     if (backToInfo) $('#infoplayer').fadeIn(fadeTimeStop)
     else $('#infoplayer').fadeOut(fadeTimePause)
@@ -109,4 +119,4 @@ video.onerror = function() {
     console.log("error ",video.error.message)
 };
 
-onMessage("loop _standby.mp4")
+onMessage("wait")

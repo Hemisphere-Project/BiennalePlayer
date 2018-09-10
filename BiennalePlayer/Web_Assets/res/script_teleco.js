@@ -12,6 +12,7 @@ var loadedFilm = 'none';
 var playOrPause = 'pause';
 var isPlaying = false;
 
+
 // DEBUG
 ///////////////////////////////////////////////////////////
 // $('#waitScreen').hide();
@@ -59,7 +60,7 @@ $('.film').on('click',function(){
 
   $('#filmFiche').empty()
   $('#filmFiche').append(movie.html())
-  sendMessage('info '+$('#filmFiche')[0].outerHTML.replace(/(\r\n\t|\n|\r\t)/gm,"") );
+  sendMessage('info '+$('#filmFiche')[0].outerHTML.replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/'/g, "\\'") );
   $('.player').fadeIn(fadeTime, function(){ /*$('.filmList').hide();*/ });
 
   // Player CTRLS
@@ -110,7 +111,7 @@ function closeFilm(){
     sendMessage('black');
     isPlaying = false;
     $('.player').fadeOut(fadeTime, function(){
-                         sendMessage('loop _standby.mp4');
+                         sendMessage('wait');
     });
     loadedFilm = 'none';
     resetTimer(idleTimeList);
@@ -150,7 +151,7 @@ function showWaitScreen() {
     if(loadedFilm!='none') sendMessage('black');
     // close film once wait screen hide the scene
     timeoutHandle2 = setTimeout(function(){ if(loadedFilm!='none') closeFilm();
-                                            else sendMessage('loop _standby.mp4');
+                                            else sendMessage('wait');
     }, fadeTime)
 }
 
