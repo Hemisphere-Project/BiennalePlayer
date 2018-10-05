@@ -28,12 +28,14 @@ function onMessage(message){
     if (message[0] == "play" || message[0] == "loop" || message[0] == "wait") {
         loop = (message[0] == "loop" || message[0] == "wait")
 
-        if (message[0] == "wait") videoLoad(standbyMedia)
+        if (message[0] == "wait") {
+          videoLoad(standbyMedia)
+          $('#wait_overlay').show()
+          video.muted = true
+        }
         else if (message.length > 1 && message[1] != currentMedia) videoLoad(message[1])
 
         if (currentMedia!= "") videoPlay()
-
-        if (message[0] == "wait") $('#wait_overlay').show()
     }
 
     // PAUSE MOVIE
@@ -95,6 +97,7 @@ function videoStop(backToInfo) {
     else $('#infoplayer').fadeOut(fadeTimePause)
     $('#videoplayer').fadeOut(fadeTimeStop)
     video.pause();
+    video.muted = false
     currentMedia = ""
     sendMessage("stop")
 }
